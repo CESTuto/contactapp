@@ -1,41 +1,76 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title></title>
+<html ng-app="app">
 
+  <head>
+    
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-
-    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
-    <link href="css/ionic.app.css" rel="stylesheet">
-    -->
-
-    <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
-
-    <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-
-    <!-- your app's js -->
     <script src="js/app.js"></script>
-    <script src="js/controllers.js"></script>
-    <script src="js/services.js"></script>
+
   </head>
-  <body ng-app="starter">
-    <!--
-      The nav bar that will be updated as we navigate between views.
-    -->
-    <ion-nav-bar class="bar-stable">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
-    </ion-nav-bar>
-    <!--
-      The views will be rendered in the <ion-nav-view> directive below
-      Templates are in the /templates folder (but you could also
-      have templates inline in this html file if you'd like).
-    -->
-    <ion-nav-view></ion-nav-view>
+
+  <body  ng-controller="ContactController">
+    <ion-tabs class="tabs-positive">
+	<ion-tab title="Create">
+	<ion-header-bar class="bar-positive">
+  <h1 class="title">Create Contacts</h1>
+  </ion-header-bar>
+	<ion-content>
+	<div >
+	<form>
+  <label class="item item-input item-stacked-label">
+    <span class="input-label">First Name</span>
+    <input type="text" placeholder="" name="name" ng-model="newcontact.name">
+  </label>
+  <label class="item item-input item-stacked-label">
+    <span class="input-label">Last Name</span>
+    <input type="text" placeholder="" name="lname" ng-model="newcontact.lname">
+  </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Phone</span>
+    <input type="number" placeholder="" name="phone" ng-model="newcontact.phone">
+  </label>
+  <label class="item item-input item-stacked-label">
+    <span class="input-label">Email</span>
+    <input type="text" placeholder="" name="email" ng-model="newcontact.email">
+  </label>
+  <br>
+        <input type="hidden" ng-model="newcontact.id">
+  <p align="center"><button class="button button-positive" ng-click="saveContact()"  >
+  Create
+</button></p>
+</div>
+
+	</ion-content>
+	</ion-tab>
+	<ion-tab title="Contacts">
+	<ion-header-bar class="bar-positive">
+  <h1 class="title">All Contacts</h1>
+  </ion-header-bar>
+	<ion-content>
+	<label class="item item-input item-stacked-label">
+	<input type="search" placeholder="Search" ng-model="searchText" >
+	</label>
+	<div class="list" ng-repeat="contact in contacts | filter:searchText | orderBy:searchText">
+
+	
+
+    <a class="item item-thumbnail-left" href="#">
+      <img src="cover.jpg">
+      <h2>{{ contact.name }}</h2>
+      <p>{{ contact.lname }}</p>
+	  <p>{{ contact.phone }}</p>
+	  <p>{{ contact.email }}</p>
+	  <p align="center"><button href="#" ng-click="edit(contact.id)">edit</button> | 
+    <button href="#" ng-click="delete(contact.id)">delete</button></p>
+    </a>
+	
+	
+</div>
+	</ion-content>
+	</ion-tab>
+	</ion-tabs>
   </body>
 </html>

@@ -1,102 +1,79 @@
-// Ionic Starter App
+var module = angular.module('app', ["ionic"]);
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+module.service('ContactService', function () {
 
-.run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if (window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    }
-    if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
-    }
-  });
-})
+    var uid = 1;
+    
+  
+    var contacts = [{
+        id: 0,
+        'name': 'Sawan',
+		'lname': 'Kumar',
+		'phone': 9827109369,
+        'email': 'sawankumarbundelkhandi@gmail.com'
+            
+    }];
+    
 
-.config(function($stateProvider, $urlRouterProvider) {
-
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
-  $stateProvider
-
-  // setup an abstract state for the tabs directive
-    .state('tab', {
-    url: "/tab",
-    abstract: true,
-    templateUrl: "templates/tabs.html"
-  })
-
-  // Each tab has its own nav history stack:
-
-  .state('tab.dash', {
-    url: '/dash',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
-      }
-    }
-  })
-
-  .state('tab.chats', {
-      url: '/chats',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
+    this.save = function (contact) {
+        if (contact.id == null) {
+          
+            contact.id = uid++;
+            contacts.push(contact);
+        } else {
+            
+            for (i in contacts) {
+                if (contacts[i].id == contact.id) {
+                    contacts[i] = contact;
+                }
+            }
         }
-      }
-    })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-    })
 
-  .state('tab.friends', {
-      url: '/friends',
-      views: {
-        'tab-friends': {
-          templateUrl: 'templates/tab-friends.html',
-          controller: 'FriendsCtrl'
-        }
-      }
-    })
-    .state('tab.friend-detail', {
-      url: '/friend/:friendId',
-      views: {
-        'tab-friends': {
-          templateUrl: 'templates/friend-detail.html',
-          controller: 'FriendDetailCtrl'
-        }
-      }
-    })
-
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
-      }
     }
-  });
 
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
 
+    this.get = function (id) {
+        for (i in contacts) {
+            if (contacts[i].id == id) {
+                return contacts[i];
+            }
+        }
+
+    }
+    
+
+    this.delete = function (id) {
+        for (i in contacts) {
+            if (contacts[i].id == id) {
+                contacts.splice(i, 1);
+            }
+        }
+    }
+
+
+    this.list = function () {
+        return contacts;
+    }
 });
+
+module.controller('ContactController', function ($scope, ContactService) {
+
+    $scope.contacts = ContactService.list();
+
+    $scope.saveContact = function () {
+        ContactService.save($scope.newcontact);
+        $scope.newcontact = {};
+    }
+
+
+    $scope.delete = function (id) {
+
+        ContactService.delete(id);
+        if ($scope.newcontact.id == id) $scope.newcontact = {};
+    }
+
+
+    $scope.edit = function (id) {
+        $scope.newcontact = angular.copy(ContactService.get(id));
+    }
+})
