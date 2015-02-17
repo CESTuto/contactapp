@@ -6,7 +6,7 @@ module.service('ContactService', function () {
     
   
     var contacts = [{
-        id: 0,
+        'id': 0,
         'name': 'Sawan',
 		'lname': 'Kumar',
 		'phone': 9827109369,
@@ -59,6 +59,8 @@ module.service('ContactService', function () {
 module.controller('ContactController', function ($scope, ContactService) {
 
     $scope.contacts = ContactService.list();
+    // Initialize scope object
+    $scope.newcontact = {};
 
     $scope.saveContact = function () {
         ContactService.save($scope.newcontact);
